@@ -131,7 +131,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       width: 100%;
       max-width: 680px;
     }
@@ -318,18 +318,25 @@
       font-weight: 700;
     }
 
-    /* Tarjeta de Interpretación de Resultados */
-    .interpretation-card {
+    /* Tarjetas de Acción Posterior: Comprobación e Interpretación */
+    .action-card {
       background: #ffffff;
-      border: 2.5px solid #38bdf8;
       border-radius: 20px;
       padding: 18px 20px;
       width: 100%;
-      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
       display: none;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
       animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .check-card {
+      border: 2.5px solid #10b981;
+    }
+
+    .interpretation-card {
+      border: 2.5px solid #38bdf8;
     }
 
     @keyframes fadeIn {
@@ -337,13 +344,25 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .interpretation-title {
+    .card-heading {
       font-family: 'Fredoka', cursive;
       font-size: 1.25rem;
-      color: #0369a1;
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .card-heading.check-title { color: #047857; }
+    .card-heading.interp-title { color: #0369a1; }
+
+    .formula-banner {
+      background: #ecfdf5;
+      border-left: 4px solid #10b981;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #065f46;
     }
 
     .interp-block {
@@ -366,45 +385,47 @@
     }
 
     .sentence-container {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: #334155;
-      line-height: 1.9;
+      line-height: 2;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .interp-input {
-      width: 58px;
-      padding: 4px 6px;
-      border: 2px solid #0284c7;
+    .interactive-inp {
+      width: 68px;
+      padding: 5px 8px;
+      border: 2px solid #cbd5e1;
       border-radius: 10px;
       font-family: 'Fredoka', cursive;
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       text-align: center;
-      color: #0369a1;
+      color: #0f172a;
       outline: none;
-      background: #f0f9ff;
+      background: #f8fafc;
+      transition: all 0.2s;
     }
 
-    .interp-input:focus {
+    .interactive-inp:focus {
+      border-color: #0284c7;
       background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
     }
 
-    .interp-input.correct {
-      border-color: #22c55e;
-      background: #f0fdf4;
-      color: #15803d;
+    .interactive-inp.correct {
+      border-color: #22c55e !important;
+      background: #f0fdf4 !important;
+      color: #15803d !important;
       pointer-events: none;
     }
 
-    .interp-input.wrong {
-      border-color: #ef4444;
-      background: #fee2e2;
-      color: #dc2626;
+    .interactive-inp.wrong {
+      border-color: #ef4444 !important;
+      background: #fee2e2 !important;
+      color: #dc2626 !important;
       animation: shake 0.3s;
     }
   </style>
@@ -459,27 +480,71 @@
       </div>
     </div>
 
-    <!-- Tarjeta de Interpretación Final (Doble significado) -->
-    <div class="interpretation-card" id="interpCard">
-      <div class="interpretation-title">
-        <i class="fa-solid fa-brain" style="color: #0284c7;"></i>
+    <!-- TARJETA 1: COMPROBACIÓN DE LA DIVISIÓN -->
+    <div class="action-card check-card" id="checkCard">
+      <div class="card-heading check-title">
+        <i class="fa-solid fa-square-check"></i>
+        <span>Comprobación de la División</span>
+      </div>
+
+      <div class="formula-banner">
+        💡 Relación fundamental: <strong>(Cociente × Divisor) + Residuo = Dividendo</strong>
+      </div>
+
+      <!-- Paso 1: Multiplicar cociente por divisor -->
+      <div class="interp-block">
+        <span style="font-weight:800; color:#047857; font-size:0.95rem;">
+          Paso 1: Multiplicamos el cociente por el divisor
+        </span>
+        <div class="sentence-container">
+          <input type="number" class="interactive-inp" id="chkQuotient" placeholder="Cociente">
+          <span>×</span>
+          <input type="number" class="interactive-inp" id="chkDivisor" placeholder="Divisor">
+          <span>=</span>
+          <input type="number" class="interactive-inp" id="chkProduct" placeholder="Producto">
+        </div>
+      </div>
+
+      <!-- Paso 2: Sumar el residuo al producto -->
+      <div class="interp-block">
+        <span style="font-weight:800; color:#047857; font-size:0.95rem;" id="lblStep2Remainder">
+          Paso 2: Sumamos el residuo al resultado anterior para obtener el dividendo
+        </span>
+        <div class="sentence-container">
+          <input type="number" class="interactive-inp" id="chkProduct2" placeholder="Producto">
+          <span>+</span>
+          <input type="number" class="interactive-inp" id="chkRemainder" placeholder="Residuo">
+          <span>=</span>
+          <input type="number" class="interactive-inp" id="chkDividend" placeholder="Dividendo">
+        </div>
+      </div>
+
+      <button class="btn" style="background:#10b981; align-self:flex-start;" onclick="checkVerification()">
+        <i class="fa-solid fa-calculator"></i> Comprobar Operación
+      </button>
+    </div>
+
+    <!-- TARJETA 2: INTERPRETACIÓN DEL RESULTADO -->
+    <div class="action-card interpretation-card" id="interpCard">
+      <div class="card-heading interp-title">
+        <i class="fa-solid fa-brain"></i>
         <span>Interpretemos el resultado de la división</span>
       </div>
 
-      <!-- Interpretación 1: Divisor como tamaño de cada grupo (Cuotición / Medida) -->
+      <!-- Interpretación A: Cuotición -->
       <div class="interp-block">
         <div class="interp-subtitle">
           <i class="fa-solid fa-boxes-stacked"></i> Interpretación A: ¿Cuántos grupos se forman? (Divisor = Cantidad por grupo)
         </div>
         <div class="sentence-container">
           <span>Se formaron</span>
-          <input type="number" class="interp-input" id="inpQuotient1" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpQuotient1" placeholder="?">
           <span>grupos de</span>
-          <input type="number" class="interp-input" id="inpDivisor1" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpDivisor1" placeholder="?">
           <span>elementos cada uno, a partir de un total de</span>
-          <input type="number" class="interp-input" id="inpDividend1" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpDividend1" placeholder="?">
           <span>y sobran</span>
-          <input type="number" class="interp-input" id="inpRemainder1" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpRemainder1" placeholder="?">
           <span>unidades.</span>
         </div>
         <button class="btn" style="align-self: flex-start; margin-top: 4px; padding: 6px 14px; font-size: 0.9rem;" onclick="checkInterpretation1()">
@@ -487,20 +552,20 @@
         </button>
       </div>
 
-      <!-- Interpretación 2: Divisor como cantidad de grupos (Partición / Reparto) -->
+      <!-- Interpretación B: Partición -->
       <div class="interp-block">
         <div class="interp-subtitle">
           <i class="fa-solid fa-users"></i> Interpretación B: ¿Cuánto le toca a cada uno? (Divisor = Cantidad de grupos)
         </div>
         <div class="sentence-container">
           <span>Si se reparten</span>
-          <input type="number" class="interp-input" id="inpDividend2" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpDividend2" placeholder="?">
           <span>elementos en</span>
-          <input type="number" class="interp-input" id="inpDivisor2" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpDivisor2" placeholder="?">
           <span>grupos iguales, le corresponden</span>
-          <input type="number" class="interp-input" id="inpQuotient2" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpQuotient2" placeholder="?">
           <span>a cada grupo y sobran</span>
-          <input type="number" class="interp-input" id="inpRemainder2" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpRemainder2" placeholder="?">
           <span>unidades.</span>
         </div>
         <button class="btn" style="align-self: flex-start; margin-top: 4px; padding: 6px 14px; font-size: 0.9rem;" onclick="checkInterpretation2()">
@@ -542,7 +607,9 @@
         return;
       }
 
+      document.getElementById('checkCard').style.display = 'none';
       document.getElementById('interpCard').style.display = 'none';
+      resetVerificationInputs();
       resetInterpInputs();
 
       generatePlan();
@@ -657,7 +724,7 @@
           covered: initialCovered,
           label: label1,
           qCol: qCol1,
-          prompt: `Tapamos las demás cifras con el dedo[cite: 2]. ¿Cuántas veces cabe ${divisor} en ${firstDigit}?`
+          prompt: `Tapamos las demás cifras con el dedo. ¿Cuántas veces cabe ${divisor} en ${firstDigit}?`
         });
 
         studentSteps.push({
@@ -686,7 +753,7 @@
           col: divColStart + 1,
           expected: secondDigit.toString(),
           covered: coveredNext,
-          prompt: `Destapa la siguiente cifra (${secondDigit}) y bájala junto al ${rem1}[cite: 2].`
+          prompt: `Destapa la siguiente cifra (${secondDigit}) y bájala junto al ${rem1}.`
         });
 
         let q2 = Math.floor(val2 / divisor);
@@ -702,7 +769,7 @@
           expected: q2.toString(),
           label: label2,
           qCol: qCol2,
-          prompt: `Se forma el número ${val2}[cite: 2]. ¿Cuántas veces cabe ${divisor} en ${val2}?`
+          prompt: `Se forma el número ${val2}. ¿Cuántas veces cabe ${divisor} en ${val2}?`
         });
 
         studentSteps.push({
@@ -877,9 +944,9 @@
 
     function activateStep(idx) {
       if (idx >= studentSteps.length) {
-        setFeedback(`¡Algoritmo vertical completado! Ahora completa ambas interpretaciones abajo.`, "success");
+        setFeedback(`¡Algoritmo vertical completado! Ahora realiza la comprobación multiplicando el cociente por el divisor.`, "success");
         positionFinger([]);
-        showInterpretationModule();
+        showCompletionModules();
         return;
       }
 
@@ -954,15 +1021,81 @@
     }
 
     /* =========================================================================
-       MÓDULO DE INTERPRETACIÓN DUAL DEL RESULTADO
+       MÓDULO DE COMPROBACIÓN: COCIENTE × DIVISOR + RESIDUO = DIVIDENDO
        ========================================================================= */
-    function showInterpretationModule() {
-      const card = document.getElementById('interpCard');
-      card.style.display = 'flex';
-      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      document.getElementById('inpQuotient1').focus();
+    function showCompletionModules() {
+      const checkCard = document.getElementById('checkCard');
+      const interpCard = document.getElementById('interpCard');
+      checkCard.style.display = 'flex';
+      interpCard.style.display = 'flex';
+
+      const rem = dividend % divisor;
+      const lblRem = document.getElementById('lblStep2Remainder');
+      if (rem === 0) {
+        lblRem.textContent = 'Paso 2: Como el residuo es 0 (división exacta), el producto es igual al dividendo:';
+      } else {
+        lblRem.textContent = `Paso 2: Sumamos el residuo (${rem}) al producto para obtener el dividendo:`;
+      }
+
+      checkCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      document.getElementById('chkQuotient').focus();
     }
 
+    function resetVerificationInputs() {
+      const ids = ['chkQuotient', 'chkDivisor', 'chkProduct', 'chkProduct2', 'chkRemainder', 'chkDividend'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.value = '';
+          el.className = 'interactive-inp';
+        }
+      });
+    }
+
+    function checkVerification() {
+      const expectedQ = Math.floor(dividend / divisor);
+      const expectedR = dividend % divisor;
+      const expectedProd = expectedQ * divisor;
+
+      const inpQ = document.getElementById('chkQuotient');
+      const inpDiv = document.getElementById('chkDivisor');
+      const inpProd = document.getElementById('chkProduct');
+      const inpProd2 = document.getElementById('chkProduct2');
+      const inpRem = document.getElementById('chkRemainder');
+      const inpDvd = document.getElementById('chkDividend');
+
+      let allOk = true;
+
+      // Paso 1: Multiplicación
+      if (parseInt(inpQ.value) === expectedQ) inpQ.className = 'interactive-inp correct';
+      else { inpQ.className = 'interactive-inp wrong'; allOk = false; }
+
+      if (parseInt(inpDiv.value) === divisor) inpDiv.className = 'interactive-inp correct';
+      else { inpDiv.className = 'interactive-inp wrong'; allOk = false; }
+
+      if (parseInt(inpProd.value) === expectedProd) inpProd.className = 'interactive-inp correct';
+      else { inpProd.className = 'interactive-inp wrong'; allOk = false; }
+
+      // Paso 2: Suma del residuo
+      if (parseInt(inpProd2.value) === expectedProd) inpProd2.className = 'interactive-inp correct';
+      else { inpProd2.className = 'interactive-inp wrong'; allOk = false; }
+
+      if (parseInt(inpRem.value) === expectedR) inpRem.className = 'interactive-inp correct';
+      else { inpRem.className = 'interactive-inp wrong'; allOk = false; }
+
+      if (parseInt(inpDvd.value) === dividend) inpDvd.className = 'interactive-inp correct';
+      else { inpDvd.className = 'interactive-inp wrong'; allOk = false; }
+
+      if (allOk) {
+        setFeedback(`¡Comprobación exitosa! (${expectedQ} × ${divisor}) + ${expectedR} = ${dividend}. La división es 100% correcta.`, "success");
+      } else {
+        setFeedback(`Revisa los números en rojo: multiplica el cociente (${expectedQ}) por el divisor (${divisor}) y súmale el residuo (${expectedR}).`, "error");
+      }
+    }
+
+    /* =========================================================================
+       MÓDULO DE INTERPRETACIÓN DUAL DEL RESULTADO
+       ========================================================================= */
     function resetInterpInputs() {
       const ids = [
         'inpQuotient1', 'inpDivisor1', 'inpDividend1', 'inpRemainder1',
@@ -972,7 +1105,7 @@
         const el = document.getElementById(id);
         if (el) {
           el.value = '';
-          el.className = 'interp-input';
+          el.className = 'interactive-inp';
         }
       });
     }
@@ -988,33 +1121,17 @@
 
       let allOk = true;
 
-      if (parseInt(inpQ.value) === expectedQ) {
-        inpQ.className = 'interp-input correct';
-      } else {
-        inpQ.className = 'interp-input wrong';
-        allOk = false;
-      }
+      if (parseInt(inpQ.value) === expectedQ) inpQ.className = 'interactive-inp correct';
+      else { inpQ.className = 'interactive-inp wrong'; allOk = false; }
 
-      if (parseInt(inpDiv.value) === divisor) {
-        inpDiv.className = 'interp-input correct';
-      } else {
-        inpDiv.className = 'interp-input wrong';
-        allOk = false;
-      }
+      if (parseInt(inpDiv.value) === divisor) inpDiv.className = 'interactive-inp correct';
+      else { inpDiv.className = 'interactive-inp wrong'; allOk = false; }
 
-      if (parseInt(inpDvd.value) === dividend) {
-        inpDvd.className = 'interp-input correct';
-      } else {
-        inpDvd.className = 'interp-input wrong';
-        allOk = false;
-      }
+      if (parseInt(inpDvd.value) === dividend) inpDvd.className = 'interactive-inp correct';
+      else { inpDvd.className = 'interactive-inp wrong'; allOk = false; }
 
-      if (parseInt(inpRem.value) === expectedR) {
-        inpRem.className = 'interp-input correct';
-      } else {
-        inpRem.className = 'interp-input wrong';
-        allOk = false;
-      }
+      if (parseInt(inpRem.value) === expectedR) inpRem.className = 'interactive-inp correct';
+      else { inpRem.className = 'interactive-inp wrong'; allOk = false; }
 
       if (allOk) {
         setFeedback(`¡Muy bien! Has completado la Interpretación A (cuotición / agrupamiento).`, "success");
@@ -1034,33 +1151,17 @@
 
       let allOk = true;
 
-      if (parseInt(inpDvd.value) === dividend) {
-        inpDvd.className = 'interp-input correct';
-      } else {
-        inpDvd.className = 'interp-input wrong';
-        allOk = false;
-      }
+      if (parseInt(inpDvd.value) === dividend) inpDvd.className = 'interactive-inp correct';
+      else { inpDvd.className = 'interactive-inp wrong'; allOk = false; }
 
-      if (parseInt(inpDiv.value) === divisor) {
-        inpDiv.className = 'interp-input correct';
-      } else {
-        inpDiv.className = 'interp-input wrong';
-        allOk = false;
-      }
+      if (parseInt(inpDiv.value) === divisor) inpDiv.className = 'interactive-inp correct';
+      else { inpDiv.className = 'interactive-inp wrong'; allOk = false; }
 
-      if (parseInt(inpQ.value) === expectedQ) {
-        inpQ.className = 'interp-input correct';
-      } else {
-        inpQ.className = 'interp-input wrong';
-        allOk = false;
-      }
+      if (parseInt(inpQ.value) === expectedQ) inpQ.className = 'interactive-inp correct';
+      else { inpQ.className = 'interactive-inp wrong'; allOk = false; }
 
-      if (parseInt(inpRem.value) === expectedR) {
-        inpRem.className = 'interp-input correct';
-      } else {
-        inpRem.className = 'interp-input wrong';
-        allOk = false;
-      }
+      if (parseInt(inpRem.value) === expectedR) inpRem.className = 'interactive-inp correct';
+      else { inpRem.className = 'interactive-inp wrong'; allOk = false; }
 
       if (allOk) {
         setFeedback(`¡Excelente! Has completado la Interpretación B (partición / reparto equitativo).`, "success");
