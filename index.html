@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
@@ -79,7 +80,7 @@
     }
 
     input[type="number"].num-input {
-      width: 78px;
+      width: 82px;
       padding: 6px 8px;
       border: 2px solid #cbd5e1;
       border-radius: 12px;
@@ -133,23 +134,23 @@
       align-items: center;
       gap: 14px;
       width: 100%;
-      max-width: 680px;
+      max-width: 760px;
     }
 
     .feedback-box {
       background: #eff6ff;
       border-left: 5px solid #0284c7;
-      padding: 10px 16px;
-      border-radius: 14px;
+      padding: 12px 18px;
+      border-radius: 16px;
       width: 100%;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #1e3a8a;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      min-height: 48px;
+      min-height: 52px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       transition: all 0.2s ease;
     }
 
@@ -169,8 +170,8 @@
     .grid-board-wrapper {
       position: relative;
       background: #ffffff;
-      padding: 16px;
-      border-radius: 20px;
+      padding: 20px;
+      border-radius: 24px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       border: 2px solid #cbd5e1;
       display: inline-block;
@@ -178,7 +179,7 @@
 
     .math-grid {
       display: grid;
-      grid-template-columns: repeat(7, 46px);
+      grid-template-columns: repeat(8, 46px);
       grid-auto-rows: 46px;
       gap: 0;
       position: relative;
@@ -194,6 +195,13 @@
       font-weight: 600;
       color: #1e293b;
       position: relative;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    /* Ocultar completamente el texto bajo el dedo para evitar confusión visual */
+    .grid-cell.digit-covered {
+      background-color: #ffedd5 !important;
+      color: transparent !important;
     }
 
     .cell-c { background: var(--c-color); color: var(--c-text); font-weight: 700; border-style: solid; }
@@ -262,55 +270,50 @@
       75% { transform: translateX(4px); }
     }
 
-    /* Dedo que cubre cifras */
+    /* Dedos Tapadores Alineados Exactamente a las Celdas */
     .finger-overlay {
       position: absolute;
-      z-index: 10;
+      z-index: 30;
       pointer-events: none;
-      transition: all 0.35s ease;
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-
-    .finger-graphic {
-      width: 40px;
-      background: #fed7aa;
-      border: 2px solid #f97316;
-      border-radius: 20px 20px 10px 10px;
-      box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
-      position: relative;
-      display: flex;
       justify-content: center;
-      align-items: flex-start;
-      padding-top: 6px;
+      background: linear-gradient(180deg, #ffedd5 0%, #fed7aa 60%, #fdba74 100%);
+      border: 2.5px solid #ea580c;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(234, 88, 12, 0.4);
+      box-sizing: border-box;
     }
 
     .finger-nail {
       width: 20px;
-      height: 16px;
-      background: #ffedd5;
+      height: 14px;
+      background: #fff7ed;
       border: 1.5px solid #fdba74;
       border-radius: 8px 8px 12px 12px;
+      margin-bottom: 2px;
     }
 
     .finger-crease {
-      position: absolute;
-      bottom: 12px;
-      width: 18px;
+      width: 16px;
       height: 2px;
       background: #fdba74;
       border-radius: 2px;
+      margin-bottom: 2px;
     }
 
     .finger-label {
       font-size: 10px;
-      font-weight: 800;
-      color: #c2410c;
-      margin-top: 2px;
-      background: rgba(255,255,255,0.9);
-      padding: 1px 4px;
-      border-radius: 4px;
+      font-weight: 900;
+      color: #9a3412;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1px 6px;
+      border-radius: 5px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      white-space: nowrap;
+      letter-spacing: 0.5px;
     }
 
     .orange-text {
@@ -318,7 +321,7 @@
       font-weight: 700;
     }
 
-    /* Tarjetas de Acción Posterior: Comprobación e Interpretación */
+    /* Tarjetas Posteriores */
     .action-card {
       background: #ffffff;
       border-radius: 20px;
@@ -331,13 +334,8 @@
       animation: fadeIn 0.4s ease-in-out;
     }
 
-    .check-card {
-      border: 2.5px solid #10b981;
-    }
-
-    .interpretation-card {
-      border: 2.5px solid #38bdf8;
-    }
+    .check-card { border: 2.5px solid #10b981; }
+    .interpretation-card { border: 2.5px solid #38bdf8; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
@@ -369,19 +367,10 @@
       background: #f8fafc;
       border: 1.5px solid #e2e8f0;
       border-radius: 14px;
-      padding: 12px 14px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-    }
-
-    .interp-subtitle {
-      font-family: 'Fredoka', cursive;
-      font-size: 1.05rem;
-      color: #0284c7;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      gap: 10px;
     }
 
     .sentence-container {
@@ -396,7 +385,7 @@
     }
 
     .interactive-inp {
-      width: 68px;
+      width: 76px;
       padding: 5px 8px;
       border: 2px solid #cbd5e1;
       border-radius: 10px;
@@ -434,33 +423,31 @@
 
   <header>
     <h1><i class="fa-solid fa-divide"></i> Práctica Guiada de la División Vertical</h1>
-    <p style="color: #64748b; font-weight:700;">Escribe en cada casilla activa para avanzar paso a paso</p>
+    <p style="color: #64748b; font-weight:700;">Tapa cifras con los dedos para estimar mentalmente cada paso</p>
   </header>
 
-  <!-- Panel de Configuración -->
+  <!-- Panel de Configuración con Presets Variados -->
   <div class="config-card">
     <div class="input-box">
       <span>Dividendo:</span>
-      <input type="number" id="inputDividend" class="num-input" min="10" max="999" value="52">
+      <input type="number" id="inputDividend" class="num-input" min="10" max="999" value="84">
     </div>
     <div class="input-box">
       <span>Divisor:</span>
-      <input type="number" id="inputDivisor" class="num-input" min="2" max="9" value="4">
+      <input type="number" id="inputDivisor" class="num-input" min="2" max="99" value="21">
     </div>
     <button class="btn" onclick="initDivision()"><i class="fa-solid fa-play"></i> Practicar</button>
-    <button class="btn btn-secondary" onclick="setPreset(52, 4)">
-      52 ÷ 4
-    </button>
-    <button class="btn btn-secondary" onclick="setPreset(36, 5)">
-      36 ÷ 5 (D &lt; d)
-    </button>
-    <button class="btn btn-secondary" onclick="setPreset(528, 4)">
-      528 ÷ 4 (3 Cifras)
-    </button>
+    <button class="btn btn-secondary" onclick="setPreset(84, 21)">84 ÷ 21</button>
+    <button class="btn btn-secondary" onclick="setPreset(52, 4)">52 ÷ 4</button>
+    <button class="btn btn-secondary" onclick="setPreset(36, 5)">36 ÷ 5</button>
+    <button class="btn btn-secondary" onclick="setPreset(288, 24)">288 ÷ 24</button>
+    <button class="btn btn-secondary" onclick="setPreset(144, 24)">144 ÷ 24</button>
+    <button class="btn btn-secondary" onclick="setPreset(528, 4)">528 ÷ 4</button>
+    <button class="btn btn-secondary" onclick="setPreset(532, 25)">532 ÷ 25</button>
   </div>
 
   <div class="main-workspace">
-    <!-- Mensaje dinámico de ayuda y retroalimentación -->
+    <!-- Mensaje dinámico de ayuda -->
     <div class="feedback-box" id="feedbackBox">
       <i class="fa-solid fa-circle-question fa-lg" id="feedbackIcon"></i>
       <span id="feedbackText">Escribe el primer número para comenzar.</span>
@@ -469,18 +456,9 @@
     <!-- Tablero de Cuadrícula Escolar -->
     <div class="grid-board-wrapper">
       <div id="gridBoard" class="math-grid"></div>
-
-      <!-- Dedo Visual de Cobertura -->
-      <div id="fingerOverlay" class="finger-overlay" style="display: none;">
-        <div class="finger-graphic" id="fingerGraphic">
-          <div class="finger-nail"></div>
-          <div class="finger-crease"></div>
-        </div>
-        <span class="finger-label">Tapar</span>
-      </div>
     </div>
 
-    <!-- TARJETA 1: COMPROBACIÓN DE LA DIVISIÓN -->
+    <!-- TARJETA 1: COMPROBACIÓN -->
     <div class="action-card check-card" id="checkCard">
       <div class="card-heading check-title">
         <i class="fa-solid fa-square-check"></i>
@@ -491,7 +469,6 @@
         💡 Relación fundamental: <strong>(Cociente × Divisor) + Residuo = Dividendo</strong>
       </div>
 
-      <!-- Paso 1: Multiplicar cociente por divisor -->
       <div class="interp-block">
         <span style="font-weight:800; color:#047857; font-size:0.95rem;">
           Paso 1: Multiplicamos el cociente por el divisor
@@ -505,10 +482,9 @@
         </div>
       </div>
 
-      <!-- Paso 2: Sumar el residuo al producto -->
       <div class="interp-block">
         <span style="font-weight:800; color:#047857; font-size:0.95rem;" id="lblStep2Remainder">
-          Paso 2: Sumamos el residuo al resultado anterior para obtener el dividendo
+          Paso 2: Sumamos el residuo al producto
         </span>
         <div class="sentence-container">
           <input type="number" class="interactive-inp" id="chkProduct2" placeholder="Producto">
@@ -524,52 +500,27 @@
       </button>
     </div>
 
-    <!-- TARJETA 2: INTERPRETACIÓN DEL RESULTADO -->
+    <!-- TARJETA 2: INTERPRETACIÓN DE REPARTO EQUITATIVO -->
     <div class="action-card interpretation-card" id="interpCard">
       <div class="card-heading interp-title">
-        <i class="fa-solid fa-brain"></i>
-        <span>Interpretemos el resultado de la división</span>
+        <i class="fa-solid fa-users"></i>
+        <span>Interpretación del Resultado: Reparto Equitativo</span>
       </div>
 
-      <!-- Interpretación A: Cuotición -->
       <div class="interp-block">
-        <div class="interp-subtitle">
-          <i class="fa-solid fa-boxes-stacked"></i> Interpretación A: ¿Cuántos grupos se forman? (Divisor = Cantidad por grupo)
-        </div>
-        <div class="sentence-container">
-          <span>Se formaron</span>
-          <input type="number" class="interactive-inp" id="inpQuotient1" placeholder="?">
-          <span>grupos de</span>
-          <input type="number" class="interactive-inp" id="inpDivisor1" placeholder="?">
-          <span>elementos cada uno, a partir de un total de</span>
-          <input type="number" class="interactive-inp" id="inpDividend1" placeholder="?">
-          <span>y sobran</span>
-          <input type="number" class="interactive-inp" id="inpRemainder1" placeholder="?">
-          <span>unidades.</span>
-        </div>
-        <button class="btn" style="align-self: flex-start; margin-top: 4px; padding: 6px 14px; font-size: 0.9rem;" onclick="checkInterpretation1()">
-          <i class="fa-solid fa-check"></i> Comprobar Interpretación A
-        </button>
-      </div>
-
-      <!-- Interpretación B: Partición -->
-      <div class="interp-block">
-        <div class="interp-subtitle">
-          <i class="fa-solid fa-users"></i> Interpretación B: ¿Cuánto le toca a cada uno? (Divisor = Cantidad de grupos)
-        </div>
         <div class="sentence-container">
           <span>Si se reparten</span>
-          <input type="number" class="interactive-inp" id="inpDividend2" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpDividend" placeholder="?">
           <span>elementos en</span>
-          <input type="number" class="interactive-inp" id="inpDivisor2" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpDivisor" placeholder="?">
           <span>grupos iguales, le corresponden</span>
-          <input type="number" class="interactive-inp" id="inpQuotient2" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpQuotient" placeholder="?">
           <span>a cada grupo y sobran</span>
-          <input type="number" class="interactive-inp" id="inpRemainder2" placeholder="?">
+          <input type="number" class="interactive-inp" id="inpRemainder" placeholder="?">
           <span>unidades.</span>
         </div>
-        <button class="btn" style="align-self: flex-start; margin-top: 4px; padding: 6px 14px; font-size: 0.9rem;" onclick="checkInterpretation2()">
-          <i class="fa-solid fa-check"></i> Comprobar Interpretación B
+        <button class="btn" style="align-self: flex-start; margin-top: 4px;" onclick="checkInterpretation()">
+          <i class="fa-solid fa-check"></i> Comprobar Reparto
         </button>
       </div>
     </div>
@@ -577,14 +528,14 @@
 
   <script>
     /* =========================================================================
-       ESTADO Y SECUENCIA DE PASOS
+       ESTADO GLOBAL
        ========================================================================= */
-    let dividend = 52;
-    let divisor = 4;
+    let dividend = 84;
+    let divisor = 21;
     let studentSteps = [];
     let currentStepIdx = 0;
 
-    const COLS = 7;
+    const COLS = 8;
     const ROWS = 9;
     const CELL_SIZE = 46;
 
@@ -602,8 +553,12 @@
         setFeedback("Ingresa un dividendo válido entre 10 y 999.", "error");
         return;
       }
-      if (isNaN(divisor) || divisor < 2 || divisor > 9) {
-        setFeedback("Ingresa un divisor de 1 cifra entre 2 y 9.", "error");
+      if (isNaN(divisor) || divisor < 2 || divisor > 99) {
+        setFeedback("Ingresa un divisor válido de 1 o 2 cifras (entre 2 y 99).", "error");
+        return;
+      }
+      if (dividend < divisor) {
+        setFeedback("Para practicar este algoritmo, el dividendo debe ser mayor o igual que el divisor.", "error");
         return;
       }
 
@@ -618,227 +573,351 @@
       activateStep(0);
     }
 
+    /* =========================================================================
+       GENERADOR UNIVERSAL DE PASOS (1 O 2 CIFRAS EN EL DIVISOR)
+       ========================================================================= */
     function generatePlan() {
       studentSteps = [];
       const divStr = dividend.toString();
+      const disStr = divisor.toString();
       const numDigits = divStr.length;
-      
-      const divColStart = numDigits === 2 ? 2 : 1;
-      const divisorCol = 4;
+      const isDivisorTwoDigits = disStr.length === 2;
 
-      let firstDigit = parseInt(divStr[0]);
-      let takeTwo = firstDigit < divisor;
+      // Columna de inicio del dividendo en la cuadrícula (para que siempre termine en Col 3)
+      const divColStart = numDigits === 3 ? 1 : 2;
+      const divisorCol = 4; // El divisor siempre comienza en la Col 4
 
-      if (takeTwo) {
-        let currentVal = parseInt(divStr.slice(0, 2));
-        let q1 = Math.floor(currentVal / divisor);
-        let prod1 = q1 * divisor;
-        let rem1 = currentVal - prod1;
+      const firstDivDigit = parseInt(disStr[0]);
 
-        let qCol1 = numDigits === 2 ? 5 : 5;
-        let label1 = numDigits === 2 ? 'U' : 'D';
+      if (!isDivisorTwoDigits) {
+        /* -------------------------------------------------------------
+           CASO A: DIVISOR DE 1 CIFRA (2 a 9)
+           ------------------------------------------------------------- */
+        const firstDvdDigit = parseInt(divStr[0]);
+        const takeTwo = firstDvdDigit < divisor;
 
-        studentSteps.push({
-          row: 2,
-          col: qCol1,
-          expected: q1.toString(),
-          covered: numDigits === 3 ? [2] : [],
-          label: label1,
-          qCol: qCol1,
-          prompt: `Como la primera cifra (${firstDigit}) es menor que ${divisor}, toma ${currentVal}. ¿Cuántas veces cabe ${divisor} en ${currentVal}?`
-        });
+        if (takeTwo) {
+          const currentVal = parseInt(divStr.slice(0, 2));
+          const q1 = Math.floor(currentVal / divisor);
+          const prod1 = q1 * divisor;
+          const rem1 = currentVal - prod1;
 
-        studentSteps.push({
-          row: 2,
-          col: divColStart + 1,
-          startCol: divColStart,
-          numCols: 2,
-          expected: prod1.toString(),
-          drawMinus: true,
-          prompt: `Multiplica: ${q1} × ${divisor} = ¿cuánto restamos? Escribe el producto.`
-        });
-
-        studentSteps.push({
-          row: 3,
-          col: divColStart + 1,
-          expected: rem1.toString(),
-          prompt: `Calcula la resta: ${currentVal} - ${prod1} = ¿cuánto sobra?`
-        });
-
-        if (numDigits === 3) {
-          let nextDigit = parseInt(divStr[2]);
-          let newVal = rem1 * 10 + nextDigit;
-          let q2 = Math.floor(newVal / divisor);
-          let prod2 = q2 * divisor;
-          let rem2 = newVal - prod2;
+          const label1 = numDigits === 2 ? 'U' : 'D';
+          const coverDiv = numDigits === 3 ? [divColStart + 2] : [];
 
           studentSteps.push({
-            row: 3,
-            col: divColStart + 2,
-            expected: nextDigit.toString(),
-            covered: [],
-            prompt: `Destapa la siguiente cifra y bájala junto al ${rem1}.`
+            row: 2, col: 4, expected: q1.toString(),
+            coverDiv: coverDiv, coverDis: null,
+            label: label1, qCol: 4,
+            prompt: `Como la primera cifra (${firstDvdDigit}) es menor que ${divisor}, tomamos las dos cifras (${currentVal}). ${numDigits === 3 ? 'Tapamos la última cifra (' + divStr[2] + ').' : ''} ¿Cuántas veces cabe ${divisor} en ${currentVal}?`
           });
 
           studentSteps.push({
-            row: 2,
-            col: 6,
-            expected: q2.toString(),
-            label: 'U',
-            qCol: 6,
-            prompt: `Ahora divide ${newVal} ÷ ${divisor}. ¿Cuántas veces cabe ${divisor} en ${newVal}?`
+            row: 2, col: divColStart + 1,
+            startCol: divColStart, numCols: prod1.toString().length,
+            expected: prod1.toString(), drawMinus: true,
+            coverDiv: coverDiv, coverDis: null,
+            prompt: `Multiplica: ${q1} × ${divisor} = ¿cuánto restamos a ${currentVal}? Escribe el producto.`
           });
 
           studentSteps.push({
-            row: 4,
-            col: divColStart + 2,
-            startCol: divColStart + 1,
-            numCols: 2,
-            expected: prod2.toString(),
-            drawMinus: true,
-            prompt: `Multiplica: ${q2} × ${divisor} = ¿cuánto restamos?`
+            row: 3, col: divColStart + 1,
+            expected: rem1.toString(),
+            coverDiv: coverDiv, coverDis: null,
+            prompt: `Calcula la resta: ${currentVal} - ${prod1} = ¿cuánto sobra?`
+          });
+
+          if (numDigits === 3) {
+            const nextDigit = divStr[2];
+            const newVal = rem1 * 10 + parseInt(nextDigit);
+            const q2 = Math.floor(newVal / divisor);
+            const prod2 = q2 * divisor;
+            const rem2 = newVal - prod2;
+
+            studentSteps.push({
+              row: 3, col: divColStart + 2,
+              expected: nextDigit,
+              coverDiv: [], coverDis: null,
+              prompt: `Destapa la siguiente cifra (${nextDigit}) y bájala junto al ${rem1}.`
+            });
+
+            studentSteps.push({
+              row: 2, col: 5, expected: q2.toString(),
+              label: 'U', qCol: 5,
+              coverDiv: [], coverDis: null,
+              prompt: `Ahora divide ${newVal} ÷ ${divisor}. ¿Cuántas veces cabe ${divisor} en ${newVal}?`
+            });
+
+            studentSteps.push({
+              row: 4, col: divColStart + 2,
+              startCol: divColStart + 1, numCols: prod2.toString().length,
+              expected: prod2.toString(), drawMinus: true,
+              coverDiv: [], coverDis: null,
+              prompt: `Multiplica: ${q2} × ${divisor} = ¿cuánto restamos?`
+            });
+
+            studentSteps.push({
+              row: 5, col: divColStart + 2,
+              expected: rem2.toString(),
+              coverDiv: [], coverDis: null,
+              prompt: `Resta final: ${newVal} - ${prod2} = ¿cuál es el residuo final?`
+            });
+          }
+
+        } else {
+          // Primera cifra >= divisor
+          const q1 = Math.floor(firstDvdDigit / divisor);
+          const prod1 = q1 * divisor;
+          const rem1 = firstDvdDigit - prod1;
+
+          const label1 = numDigits === 3 ? 'C' : 'D';
+          const initialCovered = numDigits === 3 ? [divColStart + 1, divColStart + 2] : [divColStart + 1];
+
+          studentSteps.push({
+            row: 2, col: 4, expected: q1.toString(),
+            coverDiv: initialCovered, coverDis: null,
+            label: label1, qCol: 4,
+            prompt: `Tapamos las demás cifras con el dedo. ¿Cuántas veces cabe ${divisor} en ${firstDvdDigit}?`
           });
 
           studentSteps.push({
-            row: 5,
-            col: divColStart + 2,
+            row: 2, col: divColStart,
+            startCol: divColStart, numCols: 1,
+            expected: prod1.toString(), drawMinus: true,
+            coverDiv: initialCovered, coverDis: null,
+            prompt: `Multiplica: ${q1} × ${divisor} = ¿cuánto restamos a ${firstDvdDigit}?`
+          });
+
+          studentSteps.push({
+            row: 3, col: divColStart,
+            expected: rem1.toString(),
+            coverDiv: initialCovered, coverDis: null,
+            prompt: `Resta: ${firstDvdDigit} - ${prod1} = ¿cuál es el residuo?`
+          });
+
+          // Segunda cifra
+          const secondDigit = divStr[1];
+          const val2 = rem1 * 10 + parseInt(secondDigit);
+          const q2 = Math.floor(val2 / divisor);
+          const prod2 = q2 * divisor;
+          const rem2 = val2 - prod2;
+
+          const coveredNext = numDigits === 3 ? [divColStart + 2] : [];
+          const label2 = numDigits === 3 ? 'D' : 'U';
+
+          studentSteps.push({
+            row: 3, col: divColStart + 1,
+            expected: secondDigit,
+            coverDiv: coveredNext, coverDis: null,
+            prompt: `Destapa la siguiente cifra (${secondDigit}) y bájala junto al ${rem1}.`
+          });
+
+          studentSteps.push({
+            row: 2, col: 5, expected: q2.toString(),
+            label: label2, qCol: 5,
+            coverDiv: coveredNext, coverDis: null,
+            prompt: `Se forma el número ${val2}. ¿Cuántas veces cabe ${divisor} en ${val2}?`
+          });
+
+          studentSteps.push({
+            row: 4, col: divColStart + 1,
+            startCol: divColStart, numCols: prod2.toString().length,
+            expected: prod2.toString(), drawMinus: true,
+            coverDiv: coveredNext, coverDis: null,
+            prompt: `Multiplica: ${q2} × ${divisor} = ¿cuánto restamos a ${val2}?`
+          });
+
+          studentSteps.push({
+            row: 5, col: divColStart + 1,
             expected: rem2.toString(),
-            prompt: `Resta final: ${newVal} - ${prod2} = ¿cuál es el residuo final?`
+            coverDiv: coveredNext, coverDis: null,
+            prompt: `Resta: ${val2} - ${prod2} = ¿cuánto sobra?`
           });
+
+          if (numDigits === 3) {
+            const thirdDigit = divStr[2];
+            const val3 = rem2 * 10 + parseInt(thirdDigit);
+            const q3 = Math.floor(val3 / divisor);
+            const prod3 = q3 * divisor;
+            const rem3 = val3 - prod3;
+
+            studentSteps.push({
+              row: 5, col: divColStart + 2,
+              expected: thirdDigit,
+              coverDiv: [], coverDis: null,
+              prompt: `Destapa y baja la última cifra (${thirdDigit}) junto al residuo.`
+            });
+
+            studentSteps.push({
+              row: 2, col: 6, expected: q3.toString(),
+              label: 'U', qCol: 6,
+              coverDiv: [], coverDis: null,
+              prompt: `Divide ${val3} ÷ ${divisor}. ¿Cuántas veces cabe?`
+            });
+
+            studentSteps.push({
+              row: 6, col: divColStart + 2,
+              startCol: divColStart + 1, numCols: prod3.toString().length,
+              expected: prod3.toString(), drawMinus: true,
+              coverDiv: [], coverDis: null,
+              prompt: `Multiplica: ${q3} × ${divisor} = ¿cuánto restamos?`
+            });
+
+            studentSteps.push({
+              row: 7, col: divColStart + 2,
+              expected: rem3.toString(),
+              coverDiv: [], coverDis: null,
+              prompt: `Resta final: ${val3} - ${prod3} = ¿cuánto sobra?`
+            });
+          }
         }
+
       } else {
-        let q1 = Math.floor(firstDigit / divisor);
-        let prod1 = q1 * divisor;
-        let rem1 = firstDigit - prod1;
+        /* -------------------------------------------------------------
+           CASO B: DIVISOR DE 2 CIFRAS (10 a 99)
+           ------------------------------------------------------------- */
+        const disUnitsCol = 5; // La unidad del divisor siempre está en Col 5
 
-        let qCol1 = numDigits === 2 ? 4 : 4;
-        let label1 = numDigits === 2 ? 'D' : 'C';
-
-        let initialCovered = [];
-        for (let i = 1; i < numDigits; i++) initialCovered.push(i);
-
-        studentSteps.push({
-          row: 2,
-          col: qCol1,
-          expected: q1.toString(),
-          covered: initialCovered,
-          label: label1,
-          qCol: qCol1,
-          prompt: `Tapamos las demás cifras con el dedo. ¿Cuántas veces cabe ${divisor} en ${firstDigit}?`
-        });
-
-        studentSteps.push({
-          row: 2,
-          col: divColStart,
-          startCol: divColStart,
-          numCols: 1,
-          expected: prod1.toString(),
-          drawMinus: true,
-          prompt: `Multiplica: ${q1} × ${divisor} = ¿cuánto restamos a ${firstDigit}?`
-        });
-
-        studentSteps.push({
-          row: 3,
-          col: divColStart,
-          expected: rem1.toString(),
-          prompt: `Resta: ${firstDigit} - ${prod1} = ¿cuál es el residuo?`
-        });
-
-        let secondDigit = parseInt(divStr[1]);
-        let val2 = rem1 * 10 + secondDigit;
-        let coveredNext = numDigits === 3 ? [2] : [];
-
-        studentSteps.push({
-          row: 3,
-          col: divColStart + 1,
-          expected: secondDigit.toString(),
-          covered: coveredNext,
-          prompt: `Destapa la siguiente cifra (${secondDigit}) y bájala junto al ${rem1}.`
-        });
-
-        let q2 = Math.floor(val2 / divisor);
-        let prod2 = q2 * divisor;
-        let rem2 = val2 - prod2;
-
-        let qCol2 = numDigits === 2 ? 5 : 5;
-        let label2 = numDigits === 2 ? 'U' : 'D';
-
-        studentSteps.push({
-          row: 2,
-          col: qCol2,
-          expected: q2.toString(),
-          label: label2,
-          qCol: qCol2,
-          prompt: `Se forma el número ${val2}. ¿Cuántas veces cabe ${divisor} en ${val2}?`
-        });
-
-        studentSteps.push({
-          row: 4,
-          col: divColStart + 1,
-          startCol: divColStart,
-          numCols: 2,
-          expected: prod2.toString(),
-          drawMinus: true,
-          prompt: `Multiplica: ${q2} × ${divisor} = ¿cuánto restamos a ${val2}?`
-        });
-
-        studentSteps.push({
-          row: 5,
-          col: divColStart + 1,
-          expected: rem2.toString(),
-          prompt: `Resta: ${val2} - ${prod2} = ¿cuánto sobra?`
-        });
-
-        if (numDigits === 3) {
-          let thirdDigit = parseInt(divStr[2]);
-          let val3 = rem2 * 10 + thirdDigit;
-          let q3 = Math.floor(val3 / divisor);
-          let prod3 = q3 * divisor;
-          let rem3 = val3 - prod3;
+        if (numDigits === 2) {
+          // 2 cifras ÷ 2 cifras (ej. 84 ÷ 21)
+          const firstDvdDigit = parseInt(divStr[0]);
+          const q = Math.floor(dividend / divisor);
+          const prod = q * divisor;
+          const rem = dividend - prod;
 
           studentSteps.push({
-            row: 5,
-            col: divColStart + 2,
-            expected: thirdDigit.toString(),
-            covered: [],
-            prompt: `Destapa y baja la última cifra (${thirdDigit}) junto al residuo.`
+            row: 2, col: 4, expected: q.toString(),
+            coverDiv: [3], coverDis: disUnitsCol,
+            label: 'U', qCol: 4,
+            prompt: `Comparamos tapando las unidades de ambos (${divStr[1]} y ${disStr[1]}). Como ${firstDvdDigit} ÷ ${firstDivDigit} = ${Math.floor(firstDvdDigit/firstDivDigit)}, probamos con ${q}. Escribe ${q} en el cociente.`
           });
 
           studentSteps.push({
-            row: 2,
-            col: 6,
-            expected: q3.toString(),
-            label: 'U',
-            qCol: 6,
-            prompt: `Divide ${val3} ÷ ${divisor}. ¿Cuántas veces cabe?`
+            row: 2, col: 3,
+            startCol: 2, numCols: prod.toString().length,
+            expected: prod.toString(), drawMinus: true,
+            coverDiv: [], coverDis: null,
+            prompt: `Multiplica: ${q} × ${divisor} = ¿cuánto restamos a ${dividend}? Escribe el producto.`
           });
 
           studentSteps.push({
-            row: 6,
-            col: divColStart + 2,
-            startCol: divColStart + 1,
-            numCols: 2,
-            expected: prod3.toString(),
-            drawMinus: true,
-            prompt: `Multiplica: ${q3} × ${divisor} = ¿cuánto restamos?`
+            row: 3, col: 3,
+            expected: rem.toString(),
+            coverDiv: [], coverDis: null,
+            prompt: `Resta: ${dividend} - ${prod} = ¿cuál es el residuo?`
           });
 
-          studentSteps.push({
-            row: 7,
-            col: divColStart + 2,
-            expected: rem3.toString(),
-            prompt: `Resta final: ${val3} - ${prod3} = ¿cuánto sobra?`
-          });
+        } else {
+          // 3 cifras ÷ 2 cifras (ej. 288 ÷ 24 o 144 ÷ 24)
+          const firstTwo = parseInt(divStr.slice(0, 2));
+
+          if (firstTwo >= divisor) {
+            // Cociente de 2 cifras (ej. 288 ÷ 24 = 12)
+            const q1 = Math.floor(firstTwo / divisor);
+            const prod1 = q1 * divisor;
+            const rem1 = firstTwo - prod1;
+
+            studentSteps.push({
+              row: 2, col: 4, expected: q1.toString(),
+              coverDiv: [2, 3], coverDis: disUnitsCol,
+              label: 'D', qCol: 4,
+              prompt: `Como ${firstTwo} ≥ ${divisor}, tomamos las 2 primeras cifras (${firstTwo}). Tapamos la última cifra (${divStr[2]}) y las unidades de ambos (${divStr[1]} y ${disStr[1]}). Comparamos: ¿cuántas veces cabe ${firstDivDigit} en ${divStr[0]}? Escribe ${q1} en las decenas del cociente.`
+            });
+
+            studentSteps.push({
+              row: 2, col: 2,
+              startCol: 1, numCols: prod1.toString().length,
+              expected: prod1.toString(), drawMinus: true,
+              coverDiv: [3], coverDis: null,
+              prompt: `Multiplica: ${q1} × ${divisor} = ¿cuánto restamos a ${firstTwo}?`
+            });
+
+            studentSteps.push({
+              row: 3, col: 2,
+              expected: rem1.toString(),
+              coverDiv: [3], coverDis: null,
+              prompt: `Resta: ${firstTwo} - ${prod1} = ¿cuál es el residuo?`
+            });
+
+            const thirdDigit = divStr[2];
+            const val2 = rem1 * 10 + parseInt(thirdDigit);
+            const q2 = Math.floor(val2 / divisor);
+            const prod2 = q2 * divisor;
+            const rem2 = val2 - prod2;
+
+            studentSteps.push({
+              row: 3, col: 3,
+              expected: thirdDigit,
+              coverDiv: [], coverDis: null,
+              prompt: `Destapa y baja la siguiente cifra (${thirdDigit}) junto al ${rem1}.`
+            });
+
+            studentSteps.push({
+              row: 2, col: 5, expected: q2.toString(),
+              coverDiv: [3], coverDis: disUnitsCol,
+              label: 'U', qCol: 5,
+              prompt: `Se forma el número ${val2}. Tapamos las unidades de ambos (${thirdDigit} y ${disStr[1]}). ¿Cuántas veces cabe ${divisor} en ${val2}? Escribe ${q2} en las unidades del cociente.`
+            });
+
+            studentSteps.push({
+              row: 4, col: 3,
+              startCol: val2 < 100 ? 2 : 1, numCols: prod2.toString().length,
+              expected: prod2.toString(), drawMinus: true,
+              coverDiv: [], coverDis: null,
+              prompt: `Multiplica: ${q2} × ${divisor} = ¿cuánto restamos a ${val2}?`
+            });
+
+            studentSteps.push({
+              row: 5, col: 3,
+              expected: rem2.toString(),
+              coverDiv: [], coverDis: null,
+              prompt: `Resta final: ${val2} - ${prod2} = ¿cuál es el residuo final?`
+            });
+
+          } else {
+            // Cociente de 1 cifra: se toman las 3 cifras (ej. 144 ÷ 24 = 6)
+            const q = Math.floor(dividend / divisor);
+            const prod = q * divisor;
+            const rem = dividend - prod;
+
+            studentSteps.push({
+              row: 2, col: 4, expected: q.toString(),
+              coverDiv: [3], coverDis: disUnitsCol,
+              label: 'U', qCol: 4,
+              prompt: `Como las dos primeras cifras (${firstTwo}) son menores que ${divisor}, tomamos las 3 cifras (${dividend}). Tapamos las unidades de ambos (${divStr[2]} y ${disStr[1]}). Comparamos: ¿cuántas veces cabe ${firstDivDigit} en ${firstTwo}? Probamos con ${q} en el cociente.`
+            });
+
+            studentSteps.push({
+              row: 2, col: 3,
+              startCol: 1, numCols: prod.toString().length,
+              expected: prod.toString(), drawMinus: true,
+              coverDiv: [], coverDis: null,
+              prompt: `Multiplica: ${q} × ${divisor} = ¿cuánto restamos a ${dividend}? Escribe el producto.`
+            });
+
+            studentSteps.push({
+              row: 3, col: 3,
+              expected: rem.toString(),
+              coverDiv: [], coverDis: null,
+              prompt: `Calcula la resta final: ${dividend} - ${prod} = ¿cuál es el residuo?`
+            });
+          }
         }
       }
     }
 
+    /* =========================================================================
+       CONSTRUCCIÓN VISUAL DE LA CUADRÍCULA ESCOLAR
+       ========================================================================= */
     function renderEmptyGrid() {
       const board = document.getElementById('gridBoard');
       board.innerHTML = '';
       const numDigits = dividend.toString().length;
       const divStr = dividend.toString();
-      const divColStart = numDigits === 2 ? 2 : 1;
+      const disStr = divisor.toString();
+      const isDivisorTwoDigits = disStr.length === 2;
+
+      const divColStart = numDigits === 3 ? 1 : 2;
       const divisorCol = 4;
 
       for (let r = 0; r < ROWS; r++) {
@@ -850,6 +929,22 @@
         }
       }
 
+      // Inyectar elementos de dedos tapadores
+      const fingerDiv = document.createElement('div');
+      fingerDiv.id = 'fingerDividend';
+      fingerDiv.className = 'finger-overlay';
+      fingerDiv.style.display = 'none';
+      fingerDiv.innerHTML = `<div class="finger-nail"></div><div class="finger-crease"></div><span class="finger-label" id="fingerLabelDiv">Tapar</span>`;
+      board.appendChild(fingerDiv);
+
+      const fingerDis = document.createElement('div');
+      fingerDis.id = 'fingerDivisor';
+      fingerDis.className = 'finger-overlay';
+      fingerDis.style.display = 'none';
+      fingerDis.innerHTML = `<div class="finger-nail"></div><div class="finger-crease"></div><span class="finger-label">Tapar</span>`;
+      board.appendChild(fingerDis);
+
+      // Encabezados posicionales sobre el dividendo
       if (numDigits === 2) {
         setCellText(0, 2, 'D', 'cell-d');
         setCellText(0, 3, 'U', 'cell-u');
@@ -859,17 +954,24 @@
         setCellText(0, 3, 'U', 'cell-u');
       }
 
+      // Dividendo en fila 1
       for (let i = 0; i < numDigits; i++) {
         setCellText(1, divColStart + i, divStr[i]);
       }
-      setCellText(1, divisorCol, divisor.toString());
 
-      drawGalera(divisorCol);
+      // Divisor en fila 1
+      setCellText(1, divisorCol, disStr[0]);
+      if (isDivisorTwoDigits) {
+        setCellText(1, divisorCol + 1, disStr[1]);
+      }
+
+      drawGalera(divisorCol, isDivisorTwoDigits);
     }
 
-    function drawGalera(divisorCol) {
+    function drawGalera(divisorCol, isDivisorTwoDigits) {
       const board = document.getElementById('gridBoard');
 
+      // Línea vertical
       const vLine = document.createElement('div');
       vLine.className = 'divisor-line-v';
       vLine.style.left = `${divisorCol * CELL_SIZE}px`;
@@ -877,11 +979,12 @@
       vLine.style.height = `${CELL_SIZE + 4}px`;
       board.appendChild(vLine);
 
+      // Línea horizontal
       const hLine = document.createElement('div');
       hLine.className = 'divisor-line-h';
       hLine.style.left = `${divisorCol * CELL_SIZE}px`;
       hLine.style.top = `${2 * CELL_SIZE}px`;
-      hLine.style.width = `${3 * CELL_SIZE}px`;
+      hLine.style.width = `${(isDivisorTwoDigits ? 3.5 : 3) * CELL_SIZE}px`;
       board.appendChild(hLine);
     }
 
@@ -903,25 +1006,60 @@
       board.appendChild(line);
     }
 
-    function positionFinger(coveredIndices) {
-      const finger = document.getElementById('fingerOverlay');
-      const graphic = document.getElementById('fingerGraphic');
-      const numDigits = dividend.toString().length;
-      const divColStart = numDigits === 2 ? 2 : 1;
+    /* =========================================================================
+       POSICIONAMIENTO PRECISO DE DEDOS Y ENMASCARAMIENTO TOTAL
+       ========================================================================= */
+    function positionFingers(coverDivCols, coverDisCol) {
+      // 1. Quitar enmascaramiento de celdas previas
+      document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('digit-covered'));
 
-      if (!coveredIndices || coveredIndices.length === 0) {
-        finger.style.display = 'none';
-        return;
+      const fingerDiv = document.getElementById('fingerDividend');
+      const fingerDis = document.getElementById('fingerDivisor');
+      if (!fingerDiv || !fingerDis) return;
+
+      // 2. Dedo sobre el dividendo
+      if (coverDivCols && coverDivCols.length > 0) {
+        const firstCell = document.getElementById(`cell_1_${coverDivCols[0]}`);
+        const lastCell = document.getElementById(`cell_1_${coverDivCols[coverDivCols.length - 1]}`);
+
+        if (firstCell && lastCell) {
+          coverDivCols.forEach(c => {
+            const el = document.getElementById(`cell_1_${c}`);
+            if (el) el.classList.add('digit-covered');
+          });
+
+          fingerDiv.style.display = 'flex';
+          const left = firstCell.offsetLeft - 2;
+          const top = firstCell.offsetTop - 3;
+          const width = (lastCell.offsetLeft + lastCell.offsetWidth) - firstCell.offsetLeft + 4;
+          const height = firstCell.offsetHeight + 6;
+
+          fingerDiv.style.left = `${left}px`;
+          fingerDiv.style.top = `${top}px`;
+          fingerDiv.style.width = `${width}px`;
+          fingerDiv.style.height = `${height}px`;
+
+          const lbl = document.getElementById('fingerLabelDiv');
+          if (lbl) lbl.textContent = coverDivCols.length > 1 ? 'Tapamos' : 'Tapar';
+        }
+      } else {
+        fingerDiv.style.display = 'none';
       }
 
-      finger.style.display = 'flex';
-      const firstCol = divColStart + coveredIndices[0];
-      const count = coveredIndices.length;
-
-      finger.style.left = `${firstCol * CELL_SIZE + 3}px`;
-      finger.style.top = `${1 * CELL_SIZE - 4}px`;
-      graphic.style.width = `${count * CELL_SIZE - 6}px`;
-      graphic.style.height = `${CELL_SIZE * 1.5}px`;
+      // 3. Dedo sobre la unidad del divisor
+      if (coverDisCol !== null && coverDisCol !== undefined) {
+        const disCell = document.getElementById(`cell_1_${coverDisCol}`);
+        if (disCell) {
+          disCell.classList.add('digit-covered');
+          fingerDis.style.display = 'flex';
+          fingerDis.style.left = `${disCell.offsetLeft - 2}px`;
+          fingerDis.style.top = `${disCell.offsetTop - 3}px`;
+          fingerDis.style.width = `${disCell.offsetWidth + 4}px`;
+          fingerDis.style.height = `${disCell.offsetHeight + 6}px`;
+        }
+      } else {
+        fingerDis.style.display = 'none';
+      }
     }
 
     function setFeedback(msg, type = "normal") {
@@ -944,15 +1082,16 @@
 
     function activateStep(idx) {
       if (idx >= studentSteps.length) {
-        setFeedback(`¡Algoritmo vertical completado! Ahora realiza la comprobación multiplicando el cociente por el divisor.`, "success");
-        positionFinger([]);
+        setFeedback(`¡Algoritmo vertical completado con éxito! Realiza ahora la comprobación debajo.`, "success");
+        positionFingers([], null);
         showCompletionModules();
+        confetti({ particleCount: 75, spread: 70, origin: { y: 0.6 } });
         return;
       }
 
       const st = studentSteps[idx];
       setFeedback(st.prompt, "normal");
-      if (st.covered !== undefined) positionFinger(st.covered);
+      positionFingers(st.coverDiv, st.coverDis);
 
       const targetCell = document.getElementById(`cell_${st.row}_${st.col}`);
       targetCell.innerHTML = '';
@@ -984,16 +1123,11 @@
       const input = document.getElementById('activeInput');
 
       if (val === st.expected) {
-        const targetCell = document.getElementById(`cell_${st.row}_${st.col}`);
-
-        if (st.numCols && st.numCols > 1 && st.expected.length === 1) {
-          targetCell.innerHTML = `<span class="orange-text">${val}</span>`;
-        } else if (st.expected.length > 1) {
-          targetCell.innerHTML = `<span class="orange-text">${st.expected[st.expected.length - 1]}</span>`;
-          const prevCell = document.getElementById(`cell_${st.row}_${st.col - 1}`);
-          if (prevCell) prevCell.innerHTML = `<span class="orange-text">${st.expected[0]}</span>`;
-        } else {
-          targetCell.innerHTML = `<span class="orange-text">${val}</span>`;
+        // Renderizar los dígitos ingresados de derecha a izquierda
+        for (let k = 0; k < st.expected.length; k++) {
+          const char = st.expected[st.expected.length - 1 - k];
+          const cell = document.getElementById(`cell_${st.row}_${st.col - k}`);
+          if (cell) cell.innerHTML = `<span class="orange-text">${char}</span>`;
         }
 
         if (st.label) {
@@ -1002,7 +1136,7 @@
         }
 
         if (st.drawMinus) {
-          const minusCol = st.startCol - 1;
+          const minusCol = st.startCol ? st.startCol - 1 : st.col - st.expected.length;
           setCellText(st.row, minusCol, '-');
           drawMinusBar(st.row, minusCol, st.col);
         }
@@ -1021,7 +1155,7 @@
     }
 
     /* =========================================================================
-       MÓDULO DE COMPROBACIÓN: COCIENTE × DIVISOR + RESIDUO = DIVIDENDO
+       COMPROBACIÓN E INTERPRETACIÓN
        ========================================================================= */
     function showCompletionModules() {
       const checkCard = document.getElementById('checkCard');
@@ -1066,7 +1200,6 @@
 
       let allOk = true;
 
-      // Paso 1: Multiplicación
       if (parseInt(inpQ.value) === expectedQ) inpQ.className = 'interactive-inp correct';
       else { inpQ.className = 'interactive-inp wrong'; allOk = false; }
 
@@ -1076,7 +1209,6 @@
       if (parseInt(inpProd.value) === expectedProd) inpProd.className = 'interactive-inp correct';
       else { inpProd.className = 'interactive-inp wrong'; allOk = false; }
 
-      // Paso 2: Suma del residuo
       if (parseInt(inpProd2.value) === expectedProd) inpProd2.className = 'interactive-inp correct';
       else { inpProd2.className = 'interactive-inp wrong'; allOk = false; }
 
@@ -1088,19 +1220,14 @@
 
       if (allOk) {
         setFeedback(`¡Comprobación exitosa! (${expectedQ} × ${divisor}) + ${expectedR} = ${dividend}. La división es 100% correcta.`, "success");
+        confetti({ particleCount: 70, spread: 70, origin: { y: 0.7 } });
       } else {
         setFeedback(`Revisa los números en rojo: multiplica el cociente (${expectedQ}) por el divisor (${divisor}) y súmale el residuo (${expectedR}).`, "error");
       }
     }
 
-    /* =========================================================================
-       MÓDULO DE INTERPRETACIÓN DUAL DEL RESULTADO
-       ========================================================================= */
     function resetInterpInputs() {
-      const ids = [
-        'inpQuotient1', 'inpDivisor1', 'inpDividend1', 'inpRemainder1',
-        'inpDividend2', 'inpDivisor2', 'inpQuotient2', 'inpRemainder2'
-      ];
+      const ids = ['inpDividend', 'inpDivisor', 'inpQuotient', 'inpRemainder'];
       ids.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -1110,44 +1237,14 @@
       });
     }
 
-    function checkInterpretation1() {
+    function checkInterpretation() {
       const expectedQ = Math.floor(dividend / divisor);
       const expectedR = dividend % divisor;
 
-      const inpQ = document.getElementById('inpQuotient1');
-      const inpDiv = document.getElementById('inpDivisor1');
-      const inpDvd = document.getElementById('inpDividend1');
-      const inpRem = document.getElementById('inpRemainder1');
-
-      let allOk = true;
-
-      if (parseInt(inpQ.value) === expectedQ) inpQ.className = 'interactive-inp correct';
-      else { inpQ.className = 'interactive-inp wrong'; allOk = false; }
-
-      if (parseInt(inpDiv.value) === divisor) inpDiv.className = 'interactive-inp correct';
-      else { inpDiv.className = 'interactive-inp wrong'; allOk = false; }
-
-      if (parseInt(inpDvd.value) === dividend) inpDvd.className = 'interactive-inp correct';
-      else { inpDvd.className = 'interactive-inp wrong'; allOk = false; }
-
-      if (parseInt(inpRem.value) === expectedR) inpRem.className = 'interactive-inp correct';
-      else { inpRem.className = 'interactive-inp wrong'; allOk = false; }
-
-      if (allOk) {
-        setFeedback(`¡Muy bien! Has completado la Interpretación A (cuotición / agrupamiento).`, "success");
-      } else {
-        setFeedback(`Revisa las casillas en rojo de la Interpretación A (grupos = cociente, tamaño = divisor).`, "error");
-      }
-    }
-
-    function checkInterpretation2() {
-      const expectedQ = Math.floor(dividend / divisor);
-      const expectedR = dividend % divisor;
-
-      const inpDvd = document.getElementById('inpDividend2');
-      const inpDiv = document.getElementById('inpDivisor2');
-      const inpQ = document.getElementById('inpQuotient2');
-      const inpRem = document.getElementById('inpRemainder2');
+      const inpDvd = document.getElementById('inpDividend');
+      const inpDiv = document.getElementById('inpDivisor');
+      const inpQ = document.getElementById('inpQuotient');
+      const inpRem = document.getElementById('inpRemainder');
 
       let allOk = true;
 
@@ -1164,14 +1261,20 @@
       else { inpRem.className = 'interactive-inp wrong'; allOk = false; }
 
       if (allOk) {
-        setFeedback(`¡Excelente! Has completado la Interpretación B (partición / reparto equitativo).`, "success");
+        setFeedback(`¡Excelente! Interpretación de reparto completada correctamente.`, "success");
       } else {
-        setFeedback(`Revisa las casillas en rojo de la Interpretación B (total = dividendo, grupos = divisor, a cada uno = cociente).`, "error");
+        setFeedback(`Revisa las casillas en rojo de la interpretación.`, "error");
       }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       initDivision();
+    });
+
+    window.addEventListener('resize', () => {
+      if (studentSteps[currentStepIdx]) {
+        positionFingers(studentSteps[currentStepIdx].coverDiv, studentSteps[currentStepIdx].coverDis);
+      }
     });
   </script>
 </body>
